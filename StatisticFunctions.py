@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Author: Jack Bellamy
-Date: 29/03/23
+Date: 31/03/23
 Task: Custom Statistic Functions
 """
 
@@ -83,6 +83,23 @@ def sampleVar(data):
     
     return var
 
+
+#Covariance
+def covariance(x,y):
+    
+    dataLen = len(x)
+    if dataLen != len(y):
+        return 'Data set lengths are different'
+    else:
+        covSum = 0
+        xMean = mean(x)
+        yMean = mean(y)
+        for i in range(0,dataLen):
+            covSum += (x[i] - xMean) * (y[i] - yMean)
+        covar = covSum / (dataLen - 1)
+        return covar
+    
+
 ########################
 ### Standard Deviations
 
@@ -105,9 +122,34 @@ def stdev(data):
 ########################
 ### Correlations
 
-def pearsons(xData,yData):
+#Sample pearsons correlation
+def samplePearsons(x,y):
     
-    p=0
+    pNum = 0
+    xDen = 0
+    yDen = 0
+    
+    xMean = mean(x)
+    yMean = mean(y)
+    
+    for i in range(0,len(x)):
+        
+        pNum += (x[i] - xMean) * (y[i] - yMean)
+        xDen += (x[i] - xMean)**2
+        yDen += (y[i] - yMean)**2
+        
+    xDen = xDen ** 0.5
+    yDen = yDen ** 0.5
+    r = pNum / (xDen * yDen)
+    
+    return r
+    
+#Population pearsons correlation    
+def pearsons(x,y):
+    
+    pearsons = covariance(x,y) / (stdev(x)*stdev(y))
+    
+    return pearsons
     
     
     
