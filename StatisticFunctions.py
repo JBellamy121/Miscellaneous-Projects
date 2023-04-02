@@ -150,28 +150,3 @@ def pearsons(x,y):
     pearsons = covariance(x,y) / (stdev(x)*stdev(y))
     
     return pearsons
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
