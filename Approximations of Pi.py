@@ -9,6 +9,53 @@ Task: Pi Approximations
 import math
 import random
 
+
+#Gauss–Legendre algorithm to approximate Pi
+def gauss():
+    
+    samples = 100000
+    
+    #Initial condition parameters for algorithim
+    a0 = 1
+    b0 = 1 / math.sqrt(2)
+    t0 = 1 / 4
+    p0 = 1
+    
+    ints = 0
+    while ints < samples:
+        #
+        an = (a0 + b0) / 2
+        bn = math.sqrt(a0 * b0)
+        tn = t0 - (p0 * math.pow(a0 - an,2))
+        pn = 2 * p0
+        #Update initial variables
+        a0 = an ; b0 = bn ; t0 = tn ; pn = p0
+        
+        ints += 1
+        
+    piApprox = math.pow(a0 + b0,2) / (4 * t0)
+    return piApprox
+        
+
+#Leibniz algorithm to approximate Pi
+def leibniz():
+    
+    samples = 100000
+    
+    leibnizSum = 0
+    for i in range(0,samples):
+        
+        term = 1 / ((2 * i) + 1)
+        
+        if i % 2 == 0:
+            leibnizSum += term
+        else:
+            leibnizSum -= term
+      
+    leibnizSum = 4 * leibnizSum
+    return leibnizSum
+
+
 #Numerical integration of semi-circle function to approximate pi
 def numericalIntegration():
 
