@@ -8,8 +8,29 @@ Task: Pi Approximations
 #Modules Used
 import math
 import random
-      
 
+#Numerical integration of semi-circle function to approximate pi
+def numericalIntegration():
+
+    samples = 1000
+    xDelta = 1 / samples
+    x = 0
+    
+    yValues = []
+    while x < 1:
+        y = math.sqrt(1 - math.pow(x,2))
+        yValues.append(y)
+        x += xDelta
+        
+    areaSum = 0
+    for i in range(1,len(yValues) - 1):
+        areaSum += 2 * yValues[i]
+         
+    area = 2 * xDelta * (yValues[0] + yValues[len(yValues)-1] + areaSum)
+    return area
+        
+    
+#Chudnovsky algorithim approximation of Pi
 def chudnovsky():
     
     samples = 16
