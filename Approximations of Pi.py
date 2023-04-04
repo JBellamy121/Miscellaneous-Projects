@@ -1,19 +1,158 @@
 # -*- coding: utf-8 -*-
 """
 Author: Jack Bellamy
-Date: 3/04/23
+Date: 5/04/23
 Task: Pi Approximations
 """
 
 #Modules Used
 import math
 import random
+import time
+import matplotlib.pyplot as plt
+import itertools
+
+
+#Compare each approximation based on time and accuracy, then present graphs of results, and print which method is 'best' overall
+def approxComparison():
+    
+    #Running approximation functions, generating time to run and pi approximation
+    timeNewton = time.time()
+    newtonResult = round(newton(),15)
+    timeNewton = time.time() - timeNewton
+    
+    timeGauss = time.time()
+    gaussResult = round(gauss(),15)
+    timeGauss = time.time() - timeGauss
+    
+    timeLeibniz = time.time()
+    leibnizResult = round(leibniz(),15)
+    timeLeibniz = time.time() - timeLeibniz
+    
+    timeNumericalIntegration = time.time()
+    numericalIntegrationResult = round(numericalIntegration(),15)
+    timeNumericalIntegration = time.time() - timeNumericalIntegration
+    
+    timeChudnovsky = time.time()
+    chudnovskyResult = round(chudnovsky(),15)
+    timeChudnovsky = time.time() - timeChudnovsky
+    
+    timeArcLength = time.time()
+    arcLengthResult = round(arcLength(),15)
+    timeArcLength = time.time() - timeArcLength
+    
+    timeMonteCarlo = time.time()
+    monteCarloResult = round(monteCarlo(),15)
+    timeMonteCarlo = time.time() - timeMonteCarlo
+    
+    #Collation of Results
+    times = [timeNewton,timeGauss,timeLeibniz,timeNumericalIntegration,timeChudnovsky,timeArcLength,timeMonteCarlo]
+    approxs = [newtonResult,gaussResult,leibnizResult,numericalIntegrationResult,chudnovskyResult,arcLengthResult,monteCarloResult]
+    names = ['Newton','Gauss','Leibniz','Numerical Integration','Chudnovsky','Arc Length','Monte Carlo']
+    
+    #Calculation of percent error of each approximation
+    approxDiff = []
+    Pi = 3.14159265358979323
+    for i in range(0,len(approxs)):
+        diff = (abs(Pi - approxs[i]) / Pi) * 100
+        approxDiff.append(diff)
+    
+    
+    #Time Graph
+    plt.bar(names,times)
+    plt.xticks(rotation=45, ha='right')
+    plt.title('Times of Each Approximation')
+    plt.ylabel('Run time')
+    plt.xlabel('Method of Approximation')
+    plt.grid()
+    plt.show()
+    plt.clf()
+    
+    #Accuracy Graph
+    plt.bar(names,approxDiff)
+    plt.xticks(rotation=45, ha='right')
+    plt.title('Percent Error of each Approximation')
+    plt.ylabel('Percent Error')
+    plt.xlabel('Method of Approximation')
+    plt.grid()
+    plt.show()
+    
+    
+    #Ranking Logic
+    ranks = []
+    rankTime = [] ; rankApprox = []
+    timeNames = names.copy() ; approxNames = names.copy()
+    for i in range(0,len(names)):
+        
+        ranks.append([names[i]])
+        
+        bestTime = min(times)
+        bestTimeMethod = timeNames[times.index(bestTime)]
+        rankTime.append([bestTimeMethod,bestTime])
+        times.pop(times.index(bestTime))
+        timeNames.remove(bestTimeMethod)
+        
+        bestApprox = min(approxDiff)
+        bestApproxMethod = approxNames[approxDiff.index(bestApprox)]
+        rankApprox.append([bestApproxMethod,bestApprox])
+        approxDiff.pop(approxDiff.index(bestApprox))
+        approxNames.remove(bestApproxMethod)
+        
+    rankList = [rankTime,rankApprox]    
+    for i in range(0,2):
+        for j in range(0,len(rankList[0])):
+            name = rankList[i][j][0]
+            for k in range(0,len(ranks)):
+                if name == ranks[k][0]:
+                    if i == 0:
+                        ranks[k].append(j+1)
+                    else:
+                        ranks[k][1] += j+1
+    
+    rankName = []
+    rankValue = []
+    for i in range(0,len(ranks)):
+        rankName.append(ranks[i][0])
+        rankValue.append(ranks[i][1])
+        
+    bestMethod = min(rankValue)
+    bestName = rankName[rankValue.index(bestMethod)]
+    
+    
+    print('---------------------------')
+    print('Best Method:',bestName)
+    print('Rank List:',ranks)
+    
+
+###############################################################################
+#####################   Methods of Approximation   ############################
+###############################################################################
+    
+
+#Newton / Euler Convergence Transformation
+def newton():
+
+    samples = 50
+    
+    newtonSum = 0
+    for i in range(0,samples):
+        newtonSum += math.factorial(i) / doublefactorial((2*i)+1)
+        
+    newtonSum = newtonSum * 2
+    return newtonSum
+
+#Used in newton() function
+def doublefactorial(n):
+     if n <= 0:
+         return 1
+     else:
+         return n * doublefactorial(n-2)
 
 
 #Gauss–Legendre algorithm to approximate Pi
 def gauss():
     
-    samples = 100000
+    samples = 3
     
     #Initial condition parameters for algorithim
     a0 = 1
@@ -40,7 +179,7 @@ def gauss():
 #Leibniz algorithm to approximate Pi
 def leibniz():
     
-    samples = 100000
+    samples = 40000000
     
     leibnizSum = 0
     for i in range(0,samples):
@@ -59,7 +198,7 @@ def leibniz():
 #Numerical integration of semi-circle function to approximate pi
 def numericalIntegration():
 
-    samples = 1000
+    samples = 10000000
     xDelta = 1 / samples
     x = 0
     
@@ -80,7 +219,7 @@ def numericalIntegration():
 #Chudnovsky algorithim approximation of Pi
 def chudnovsky():
     
-    samples = 16
+    samples = 2
     piApprox = 0
     
     for i in range(0,samples):
@@ -96,7 +235,7 @@ def chudnovsky():
 #Calculating Pi through a numerical approximation of the arc length of a semi circle
 def arcLength():
     
-    samples = 10000
+    samples = 1000000
     
     x=-1
     xDelta = 2 / samples #Step size between samples
@@ -119,7 +258,7 @@ def arcLength():
 #Monte Carlo approximation of Pi
 def monteCarlo():
     
-    samples = 100000
+    samples = 10000000
     
     circleCount = 0
     squareCount = 0
