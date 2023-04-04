@@ -4,13 +4,16 @@ Author: Jack Bellamy
 Date: 5/04/23
 Task: Pi Approximations
 """
+##Run function 'approxComparison()' to see how each method of approximation compares to each other
+##Run an individual function ie: 'newton()', and it will return its approximation of Pi, 
+##The approximation is dependant on the amount of samples used, reducing samples will reduce time but might also reduce accuracy
+
 
 #Modules Used
 import math
 import random
 import time
 import matplotlib.pyplot as plt
-import itertools
 
 
 #Compare each approximation based on time and accuracy, then present graphs of results, and print which method is 'best' overall
@@ -44,6 +47,7 @@ def approxComparison():
     timeMonteCarlo = time.time()
     monteCarloResult = round(monteCarlo(),15)
     timeMonteCarlo = time.time() - timeMonteCarlo
+    
     
     #Collation of Results
     times = [timeNewton,timeGauss,timeLeibniz,timeNumericalIntegration,timeChudnovsky,timeArcLength,timeMonteCarlo]
